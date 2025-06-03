@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ToolsListResponse } from "@/app/lib/mcpClient";
 import { toolsRegistry } from "@/app/lib/toolsRegistrySingleton";
+import { getJwt, checkAccess } from "@/app/lib/auth";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const headers = req.headers;
   const { method, id, params } = body;
 
   switch (method) {
@@ -13,7 +15,7 @@ export async function POST(req: NextRequest) {
     case "tools/list":
       return handleToolsList(id);
     case "tools/call":
-      return handleToolsCall(id, params);
+      return handleToolsCall(id, headers, params);
     default:
       return new NextResponse("Method not found", { status: 404 });
   }
@@ -59,18 +61,29 @@ async function handleToolsList(id: number) {
     status: 200,
     headers: {
       "Content-Type": "text/event-stream",
-      "Accept": "application/json, text/event-stream",  
+      Accept: "application/json, text/event-stream",
     },
   });
 }
 
 async function handleToolsCall(
   id: number | string,
+  headers: Headers,
   params: {
     name: string;
     arguments: object;
   }
 ) {
+  const jwt = getJwt(headers);
+  if (!jwt) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  const isAllowed = await checkAccess(params.name, jwt);
+  if (!isAllowed) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
   const client = await toolsRegistry.getToolClient(params.name);
   if (!client) {
     return new NextResponse(`Tool ${params.name} not found`, { status: 404 });
@@ -80,7 +93,7 @@ async function handleToolsCall(
     status: 200,
     headers: {
       "Content-Type": "text/event-stream",
-      "Accept": "application/json, text/event-stream",
+      Accept: "application/json, text/event-stream",
     },
   });
 }

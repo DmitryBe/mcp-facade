@@ -51,6 +51,33 @@ curl -v -N -X POST http://localhost:3001/api/mcp \
 ```
 
 
+API access rules
+
+>Note: If no access rules are defined for a tool, access is permitted by default.
+
+```sh
+
+# Get all rules
+curl http://localhost:3001/api/access-rules | jq .
+
+# Get rules for a tool
+curl http://localhost:3001/api/access-rules/by-tool/echo | jq .
+
+# Create
+curl -X POST http://localhost:3001/api/access-rules/by-tool/echo -d '{"ruleType": "WILDCARD", "value": null}'
+curl -X POST http://localhost:3001/api/access-rules/by-tool/add -d '{"ruleType": "SCOPE", "value": "openid"}'
+
+# Update
+curl -X PUT http://localhost:3001/api/access-rules/2 -d '{"ruleType": "WILDCARD"}'
+curl -X PUT http://localhost:3001/api/access-rules/2 -d '{"ruleType": "USER_ID", "value": "1,2,3"}'
+curl -X PUT http://localhost:3001/api/access-rules/2 -d '{"ruleType": "SCOPE", "value": "openid"}'
+
+# delete rule
+curl -X DELETE http://localhost:3001/api/access-rules/3
+
+```
+
+
 MCP API
 
 ```sh
