@@ -5,6 +5,9 @@ API
 
 ```sh
 
+# health check
+curl http://localhost:3001/api/health | jq .
+
 # List servers
 curl http://localhost:3001/api/mcp/servers | jq .
 
