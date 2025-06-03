@@ -47,7 +47,7 @@ export class MCPClient {
     return response.body.getReader();
   }
 
-  async callTool(id: string, toolName: string, args: object): Promise<ReadableStream<Uint8Array>> {
+  async callTool(id: string | number, toolName: string, args: object): Promise<ReadableStream<Uint8Array>> {
     const response = await fetch(this.url, {
       method: "POST",
       headers: {

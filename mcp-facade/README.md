@@ -30,6 +30,24 @@ curl -X POST http://localhost:3001/api/mcp/servers \
 # List tools
 curl http://localhost:3001/api/mcp/tools | jq .
 
+# Call tool via facade
+
+curl -v -N -X POST http://localhost:3001/api/mcp \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Connection: keep-alive" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "tools/call",
+    "params": {
+      "name": "echo",
+      "arguments": {
+        "message": "Hello, world!"
+      }
+    }
+  }'
+
 ```
 
 
@@ -37,7 +55,7 @@ MCP API
 
 ```sh
 
-curl -N -X POST http://127.0.0.1:8000/echo/mcp/ \
+curl -N -X POST http://127.0.0.1:3001/echo/mcp/ \
   -H "Accept: application/json, text/event-stream" \
   -H "Connection: keep-alive" \
   -H "Content-Type: application/json" \
@@ -57,7 +75,7 @@ curl -N -X POST http://127.0.0.1:8000/echo/mcp/ \
 
 # ping
 
-curl -N -X POST http://localhost:8000/echo/mcp/ \
+curl -N -X POST http://localhost:3001/echo/mcp/ \
   -H "Accept: application/json, text/event-stream" \
   -H "Connection: keep-alive" \
   -H "Content-Type: application/json" \
@@ -75,7 +93,7 @@ curl -N -X POST http://localhost:8000/echo/mcp/ \
 
 # list tools
 
-curl -v -N -X POST http://localhost:3003/echo/mcp/ \
+curl -v -N -X POST http://localhost:3001/api/mcp \
   -H "Accept: application/json, text/event-stream" \
   -H "Connection: keep-alive" \
   -H "Content-Type: application/json" \
@@ -83,9 +101,7 @@ curl -v -N -X POST http://localhost:3003/echo/mcp/ \
     "jsonrpc": "2.0",
     "id": 2,
     "method": "tools/list"
-  }'
-  
-   | jq -R '
+  }'| jq -R '
     select(startswith("data: "))
     | .[6:]
     | fromjson 
@@ -96,7 +112,7 @@ curl -v -N -X POST http://localhost:3003/echo/mcp/ \
 
 # call toll
 
-curl -N -X POST http://localhost:8000/echo/mcp/ \
+curl -N -X POST http://localhost:3001/api/mcp \
   -H "Accept: application/json, text/event-stream" \
   -H "Connection: keep-alive" \
   -H "Content-Type: application/json" \

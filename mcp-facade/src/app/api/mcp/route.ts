@@ -4,14 +4,14 @@ import { toolsRegistry } from "@/app/lib/toolsRegistrySingleton";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { method, id, jsonrpc, params } = body;
+  const { method, id, params } = body;
 
   switch (method) {
     case "initialize":
     case "notifications/initialized":
       return handleInitialize(id);
     case "tools/list":
-      return handleToolsList(id, jsonrpc);
+      return handleToolsList(id);
     case "tools/call":
       return handleToolsCall(id, params);
     default:
@@ -36,14 +36,14 @@ async function handleInitialize(id: number) {
   });
 }
 
-async function handleToolsList(id: number, jsonrpc: string) {
+async function handleToolsList(id: number) {
   const toolsEntry = await toolsRegistry.listToolsEntry();
   const stream = new ReadableStream({
     start(ctrl) {
       const encoder = new TextEncoder();
       ctrl.enqueue(encoder.encode("event: message\n"));
       const toolResultFinal: ToolsListResponse = {
-        jsonrpc: jsonrpc,
+        jsonrpc: "2.0",
         id: id,
         result: {
           tools: toolsEntry.map((tool) => tool.tool),
@@ -59,27 +59,28 @@ async function handleToolsList(id: number, jsonrpc: string) {
     status: 200,
     headers: {
       "Content-Type": "text/event-stream",
+      "Accept": "application/json, text/event-stream",  
     },
   });
 }
 
 async function handleToolsCall(
-  id: number,
+  id: number | string,
   params: {
     name: string;
     arguments: object;
   }
 ) {
-  const { name, arguments: args } = params;
-  const client = await toolsRegistry.getToolClient(name);
+  const client = await toolsRegistry.getToolClient(params.name);
   if (!client) {
-    return new NextResponse(`Tool ${name} not found`, { status: 404 });
+    return new NextResponse(`Tool ${params.name} not found`, { status: 404 });
   }
-  const stream = await client.callTool(id.toString(), name, args);
+  const stream = await client.callTool(id, params.name, params.arguments);
   return new NextResponse(stream, {
     status: 200,
     headers: {
       "Content-Type": "text/event-stream",
+      "Accept": "application/json, text/event-stream",
     },
   });
 }
