@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: mcp-servers
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.115.12
+Requires-Dist: langchain-core>=0.3.62
+Requires-Dist: mcp[cli]>=1.9.1
+Requires-Dist: pyjwt>=2.10.1
+Requires-Dist: uvicorn>=0.34.2

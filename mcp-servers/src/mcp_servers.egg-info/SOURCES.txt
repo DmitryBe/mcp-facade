@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/mcp_servers/echo_mcp.py
+src/mcp_servers/main.py
+src/mcp_servers/math_mcp.py
+src/mcp_servers.egg-info/PKG-INFO
+src/mcp_servers.egg-info/SOURCES.txt
+src/mcp_servers.egg-info/dependency_links.txt
+src/mcp_servers.egg-info/requires.txt
+src/mcp_servers.egg-info/top_level.txt

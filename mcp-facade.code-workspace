@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "mcp-servers"
+		},
+		{
+			"path": "mcp-facade"
+		}
+	],
+	"settings": {}
+}

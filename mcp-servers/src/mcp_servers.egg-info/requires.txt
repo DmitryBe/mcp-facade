@@ -1,0 +1,5 @@
+fastapi>=0.115.12
+langchain-core>=0.3.62
+mcp[cli]>=1.9.1
+pyjwt>=2.10.1
+uvicorn>=0.34.2
