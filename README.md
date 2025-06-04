@@ -25,12 +25,29 @@ A powerful facade service that provides a unified interface for managing and int
 - **Health Monitoring**: Built-in health check endpoints
 - **Database Backend**: PostgreSQL for storing server configurations and access rules
 
-## Installation
+## Run it locally
+
+### Run MCP servers (example)
+
+Note: can skip this step if you have your mcp servers.
+
+```bash
+cd mcp-facade/mcp-servers
+
+uv sync
+source .venv/bin/activate
+uv pip install -e .
+
+# start mcp servers
+uv run src/mcp_servers/main.py
+```
+
+### Run MCP facade
 
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/mcp-facade.git
-cd mcp-facade
+cd mcp-facade/mcp-facade
 
 # Install dependencies
 pnpm i
@@ -42,6 +59,28 @@ cp .env.example .env
 # Start the service
 pnpm dev
 ```
+
+
+### Adding configuration 
+
+```bash
+# add echo 
+curl -X POST http://localhost:3001/api/mcp/servers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "echo",
+    "url": "http://127.0.0.1:3003/echo/mcp"
+  }'
+
+# add math
+curl -X POST http://localhost:3001/api/mcp/servers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "math",
+    "url": "http://127.0.0.1:3003/math/mcp"
+  }'
+```
+
 
 ## API Documentation
 
