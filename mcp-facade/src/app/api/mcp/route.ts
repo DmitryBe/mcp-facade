@@ -10,8 +10,9 @@ export async function POST(req: NextRequest) {
   const { method, id, params } = body;
 
   switch (method) {
-    case "initialize":
     case "notifications/initialized":
+      return handleNotificationInit();
+    case "initialize":
       return handleInitialize(id);
     case "tools/list":
       return handleToolsList(id);
@@ -20,6 +21,16 @@ export async function POST(req: NextRequest) {
     default:
       return new NextResponse("Method not found", { status: 404 });
   }
+}
+
+function handleNotificationInit() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Accept": "application/json, text/event-stream"
+    }
+  });
 }
 
 async function handleInitialize(id: number) {
@@ -39,7 +50,7 @@ async function handleInitialize(id: number) {
   });
 }
 
-async function handleToolsList(id: number) {
+async function handleToolsList(id: number | string) {
   const toolsEntry = await toolsRegistry.listToolsEntry();
   const stream = new ReadableStream({
     start(ctrl) {

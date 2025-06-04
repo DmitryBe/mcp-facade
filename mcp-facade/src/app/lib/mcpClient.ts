@@ -17,7 +17,7 @@ export type Tool = {
 
 export type ToolsListResponse = {
   jsonrpc: string;
-  id: number;
+  id: number | string;
   result: {
     tools: Tool[];
   };

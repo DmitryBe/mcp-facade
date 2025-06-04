@@ -126,12 +126,12 @@ curl -X DELETE http://localhost:3001/api/mcp/servers/echo
 
 #### List Available Tools
 ```bash
-curl http://localhost:3001/api/mcp/tools | jq .
+curl http://localhost:3000/api/mcp/tools | jq .
 ```
 
 #### Call a Tool
 ```bash
-curl -v -N -X POST http://localhost:3001/api/mcp \
+curl -N -X POST http://localhost:3000/api/mcp \
   -H "Accept: application/json, text/event-stream" \
   -H "Connection: keep-alive" \
   -H "Content-Type: application/json" \
@@ -214,6 +214,19 @@ curl -N -X POST http://localhost:3001/api/mcp \
       }
     }
   }'
+```
+
+#### List tools
+```bash
+curl -N -X POST http://localhost:3000/api/mcp \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Connection: keep-alive" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/list"
+  }' | jq -R 'select(startswith("data: ")) | .[6:] | fromjson'
 ```
 
 #### Ping Server
