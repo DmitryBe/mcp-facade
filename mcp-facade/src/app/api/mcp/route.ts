@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ToolsListResponse } from "@/app/lib/mcpClient";
 import { toolsRegistry } from "@/app/lib/toolsRegistrySingleton";
 import { getJwt, checkAccess } from "@/app/lib/auth";
+import { config } from "@/app/lib/config";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -74,14 +75,16 @@ async function handleToolsCall(
     arguments: object;
   }
 ) {
-  const jwt = getJwt(headers);
-  if (!jwt) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
+  if (config.authEnabled) {
+    const jwt = getJwt(headers);
+    if (!jwt) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-  const isAllowed = await checkAccess(params.name, jwt);
-  if (!isAllowed) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    const isAllowed = await checkAccess(params.name, jwt);
+    if (!isAllowed) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
   }
 
   const client = await toolsRegistry.getToolClient(params.name);

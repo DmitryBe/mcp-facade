@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-
 import { accessRules, mcpServers } from "./schema";
+import { config } from "../lib/config";
 
 // biome-ignore lint: Forbidden non-null assertion.
-const client = postgres(process.env.POSTGRES_URL!);
+const client = postgres(config.postgresUrl);
 const db = drizzle(client);
 
 export async function getRegisteredMcpServers() {
