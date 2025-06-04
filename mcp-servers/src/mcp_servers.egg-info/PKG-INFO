@@ -9,3 +9,33 @@ Requires-Dist: langchain-core>=0.3.62
 Requires-Dist: mcp[cli]>=1.9.1
 Requires-Dist: pyjwt>=2.10.1
 Requires-Dist: uvicorn>=0.34.2
+
+# mcp-servers
+
+Install deps
+
+```bash
+uv sync
+source .venv/bin/activate
+uv pip install -e .
+```
+
+Run MCP servers
+
+```bash
+uv run src/mcp_servers/main.py
+```
+
+Run MCP inspector
+
+```sh
+npx @modelcontextprotocol/inspector
+```
+
+Use the following url
+
+```
+http://127.0.0.1:3003/echo/mcp
+http://127.0.0.1:3003/math/mcp
+```
+
