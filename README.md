@@ -60,7 +60,6 @@ cp .env.example .env
 pnpm dev
 ```
 
-
 ### Adding configuration 
 
 ```bash
@@ -79,6 +78,31 @@ curl -X POST http://localhost:3001/api/mcp/servers \
     "name": "math",
     "url": "http://127.0.0.1:3003/math/mcp"
   }'
+```
+
+### Using with `oap-langgraph-tools-agent`
+
+```bash
+# clone fork (with disabled auth)
+git clone git@github.com:DmitryBe/oap-langgraph-tools-agent.git
+cd oap-langgraph-tools-agent
+
+# install deps 
+uv sync
+source .venv/bin/activate
+
+# run langfraph server locally
+langgraph dev
+
+# open url
+open https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
+
+# create assistant with configuration
+MCPConfig
+    url: http://localhost:3000/api
+    tools: echo, add, subtract, multiply, divide
+
+# start a thread by asking somehting like: compute 2 * 5 - 3
 ```
 
 
